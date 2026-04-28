@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grainco — Courtier en Grains</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy:     #1e3a5f;
+    --navy-dk:  #132743;
+    --green:    #5aab4a;
+    --green-dk: #3d8a2e;
+    --blue:     #4a90c4;
+    --white:    #ffffff;
+    --cream:    #eef1eb;
+    --gray:     #5e6b5e;
+    --light:    #dde8d8;
+    --card-bg:  #ffffff;
+    --nav-h:    96px;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--white); color: var(--navy); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; padding: 0 4vw; z-index: 100; background: var(--white); box-shadow: 0 1px 0 rgba(30,58,95,.08); }
+  .nav-logo img { height: 72px; width: auto; display: block; }
+  footer .nav-logo img { background: var(--white); padding: 6px 10px; border-radius: 4px; }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a { font-size: .82rem; letter-spacing: .13em; text-transform: uppercase; color: var(--navy); text-decoration: none; opacity: .6; transition: opacity .2s, color .2s; font-weight: 400; }
+  .nav-links a:hover { opacity: 1; color: var(--green-dk); }
+
+  /* HERO */
+  #hero { height: 100svh; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+  .hero-text { display: flex; flex-direction: column; justify-content: center; padding: calc(var(--nav-h) + 4rem) 5vw 4rem; background: var(--white); }
+  .hero-eyebrow { font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; color: var(--green); margin-bottom: 1.2rem; font-weight: 500; }
+  .hero-title { font-family: 'Lora', serif; font-size: clamp(2.4rem, 4.5vw, 4.2rem); line-height: 1.1; font-weight: 500; color: var(--navy); margin-bottom: 1.5rem; }
+  .hero-title em { font-style: italic; color: var(--green-dk); }
+  .hero-sub { font-size: 1rem; color: var(--gray); line-height: 1.75; max-width: 28rem; margin-bottom: 2.5rem; }
+  .btn-primary { display: flex; align-items: center; gap: .6rem; padding: .9rem 2rem; background: var(--navy); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .2s; font-weight: 500; width: 100%; }
+  .btn-primary:hover { background: var(--green-dk); transform: translateY(-2px); }
+  .btn-primary svg { transition: transform .2s; margin-left: auto; }
+  .btn-primary:hover svg { transform: translateX(4px); }
+  .btn-deonto { display: flex; align-items: center; gap: .6rem; padding: .9rem 2rem; background: var(--green); color: #fff; font-family: 'DM Sans', sans-serif; font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .2s; font-weight: 500; margin-top: .8rem; width: 100%; }
+  .btn-deonto:hover { background: var(--green-dk); transform: translateY(-2px); }
+  .hero-btns { display: flex; flex-direction: column; align-items: stretch; width: 100%; gap: 0; }
+  .hero-visual { position: relative; overflow: hidden; background: var(--cream); }
+  .hero-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .hero-visual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(30,58,95,.18) 0%, transparent 55%); pointer-events: none; }
+  .hero-badge { display: block; width: 100%; background: var(--navy); color: #fff; padding: .4rem 1rem; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 500; margin-bottom: 1rem; }
+  .hero-badge-wrap { position: relative; display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
+  .hero-anniversary { width: 160px; position: absolute; bottom: calc(100% + 0.5rem); right: 0; }
+
+  /* SECTION COMMONS */
+  section { padding: 7rem 4vw; }
+  .section-label { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--green); margin-bottom: .8rem; font-weight: 500; }
+  .section-title { font-family: 'Lora', serif; font-size: clamp(2rem, 3.2vw, 2.8rem); font-weight: 500; line-height: 1.15; color: var(--navy); margin-bottom: 1rem; }
+  .section-desc { color: var(--gray); font-size: .95rem; line-height: 1.75; max-width: 44rem; margin-bottom: 3rem; }
+
+  /* CAROUSEL */
+  #carousel-section { background: var(--navy-dk); color: #fff; }
+  #carousel-section .section-title { color: #fff; }
+  #carousel-section .section-desc { color: rgba(255,255,255,.45); }
+  .carousel-outer { overflow: hidden; margin: 0 -4vw; padding: 0 4vw; }
+  .carousel-track { display: flex; gap: 1.5rem; transition: transform .55s cubic-bezier(.77,0,.18,1); will-change: transform; }
+  .carousel-slide { width: calc((100vw - 8vw - 3rem) / 3); min-width: 0; flex-shrink: 0; background: #1a2d3f; overflow: hidden; cursor: pointer; border: 1px solid rgba(90,171,74,.12); }
+  .carousel-slide img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; transition: transform .6s, opacity .4s; opacity: .82; }
+  .carousel-slide:hover img { transform: scale(1.05); opacity: 1; }
+  .slide-caption { padding: 1.2rem 1.4rem 1.6rem; }
+  .slide-caption h3 { font-family: 'Lora', serif; font-size: 1.05rem; font-weight: 500; margin-bottom: .35rem; color: #fff; }
+  .slide-caption p { font-size: .82rem; color: rgba(255,255,255,.42); line-height: 1.6; }
+  .slide-tag { display: inline-block; font-size: .65rem; letter-spacing: .14em; text-transform: uppercase; color: var(--green); margin-bottom: .5rem; font-weight: 500; }
+  .carousel-nav { display: flex; align-items: center; gap: 1rem; margin-top: 2rem; }
+  .carousel-btn { width: 48px; height: 48px; border: 1px solid rgba(255,255,255,.2); background: transparent; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: border-color .2s, background .2s; }
+  .carousel-btn:hover { border-color: var(--green); background: rgba(90,171,74,.12); }
+  .carousel-dots { display: flex; gap: .5rem; margin-left: 1rem; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.22); cursor: pointer; transition: background .2s, transform .2s; }
+  .dot.active { background: var(--green); transform: scale(1.4); }
+
+  /* PRODUITS GRID */
+  #gallery { background: var(--cream); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .gallery-item { position: relative; overflow: hidden; background: #ccc; cursor: pointer; }
+  .gallery-item.featured { grid-column: span 2; grid-row: span 2; }
+  .gallery-item img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 1; transition: transform .5s cubic-bezier(.25,.46,.45,.94); }
+  .gallery-item.featured img { aspect-ratio: auto; min-height: 300px; }
+  .gallery-item:hover img { transform: scale(1.07); }
+  .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(19,39,67,.82) 0%, rgba(19,39,67,.1) 55%, transparent 100%); opacity: 0; transition: opacity .35s; display: flex; align-items: flex-end; padding: 1.4rem; }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-overlay-text .tag { display: block; font-size: .62rem; letter-spacing: .15em; text-transform: uppercase; color: var(--green); margin-bottom: .3rem; font-weight: 500; }
+  .gallery-overlay-text h4 { font-family: 'Lora', serif; color: #fff; font-size: 1.1rem; font-weight: 500; margin-bottom: .2rem; }
+  .gallery-overlay-text p { color: rgba(255,255,255,.62); font-size: .78rem; }
+  .gallery-label { position: absolute; bottom: 0; left: 0; right: 0; padding: .9rem 1rem .8rem; background: linear-gradient(to top, rgba(19,39,67,.72) 0%, transparent 100%); pointer-events: none; }
+  .gallery-label span { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.9); font-weight: 500; }
+
+  /* SERVICES */
+  #featured { background: var(--white); }
+  .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 2rem; }
+  .feat-card { background: var(--card-bg); border: 1px solid rgba(30,58,95,.09); overflow: hidden; transition: box-shadow .3s, transform .3s; }
+  .feat-card:hover { box-shadow: 0 18px 52px rgba(30,58,95,.12); transform: translateY(-4px); }
+  .feat-card-img-wrap { overflow: hidden; }
+  .feat-card img { width: 100%; aspect-ratio: 3/2; object-fit: cover; display: block; transition: transform .5s; }
+  .feat-card:hover img { transform: scale(1.04); }
+  .feat-card-body { padding: 1.4rem 1.6rem 1.6rem; }
+  .feat-card-tag { font-size: .65rem; letter-spacing: .15em; text-transform: uppercase; color: var(--green-dk); margin-bottom: .5rem; font-weight: 500; }
+  .feat-card-body h3 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 500; margin-bottom: .6rem; color: var(--navy); }
+  .feat-card-body p { font-size: .85rem; color: var(--gray); line-height: 1.65; }
+  .feat-card-footer { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1.6rem; border-top: 1px solid rgba(30,58,95,.06); }
+  .feat-card-meta { font-size: .74rem; color: var(--gray); }
+  .feat-card-link { font-size: .74rem; letter-spacing: .1em; text-transform: uppercase; color: var(--navy); text-decoration: none; display: flex; align-items: center; gap: .4rem; font-weight: 500; transition: color .2s; }
+  .feat-card-link:hover { color: var(--green-dk); }
+
+  /* LIGHTBOX */
+  #lightbox { position: fixed; inset: 0; background: rgba(13,27,46,.94); z-index: 999; display: none; align-items: center; justify-content: center; padding: 2rem; }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 90vw; max-height: 80vh; object-fit: contain; display: block; }
+  .lb-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: 1px solid rgba(255,255,255,.28); color: #fff; width: 44px; height: 44px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: border-color .2s; }
+  .lb-close:hover { border-color: var(--green); color: var(--green); }
+  .lb-caption { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.65); font-size: .85rem; white-space: nowrap; text-align: center; }
+
+  /* CONTACT */
+  #contact { background: var(--green-dk); padding: 5rem 4vw; }
+  #contact .section-label { color: rgba(255,255,255,.6); text-align: center; }
+  #contact .section-title { color: #fff; margin-bottom: 1rem; text-align: center; }
+  #contact .section-desc { color: rgba(255,255,255,.62); margin-bottom: 2rem; text-align: center; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+  .contact-info { display: flex; flex-direction: column; gap: 1.2rem; align-items: center; text-align: center; }
+  .contact-address { color: rgba(255,255,255,.85); font-size: .95rem; line-height: 1.8; text-align: center; }
+  .contact-tel { color: rgba(255,255,255,.85); font-size: .95rem; font-weight: 500; text-align: center; }
+  .contact-map { border-radius: 2px; overflow: hidden; height: 320px; }
+  #map { width: 100%; height: 100%; }
+  @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } .contact-map { height: 260px; } }
+  .btn-white { display: inline-flex; align-items: center; gap: .6rem; padding: .9rem 2rem; background: #fff; color: var(--navy); font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: background .2s, transform .2s; }
+  .btn-white:hover { background: var(--cream); transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer { background: var(--navy-dk); color: rgba(255,255,255,.35); padding: 2.5rem 4vw; display: flex; align-items: center; justify-content: space-between; font-size: .78rem; letter-spacing: .05em; }
+  footer .nav-logo img { height: 72px; width: auto; display: block; background: var(--white); padding: 6px 10px; border-radius: 4px; }
+
+  img {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    pointer-events: none;
+  }
+  .gallery-item, .carousel-slide, .feat-card, .nav-logo, footer .nav-logo {
+    pointer-events: all;
+  }
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    #hero { grid-template-columns: 1fr; height: auto; }
+    .hero-visual { height: 52vw; min-height: 260px; }
+    .hero-text { padding: calc(var(--nav-h) + 2.5rem) 6vw 3rem; }
+    .carousel-slide { width: calc((100vw - 8vw - 1.5rem) / 2); }
+    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-item.featured { grid-column: span 2; }
+    .nav-links { gap: 1.5rem; }
+  }
+  @media (max-width: 600px) {
+    .carousel-slide { width: calc(100vw - 8vw); }
+    .gallery-grid { grid-template-columns: 1fr; }
+    .gallery-item.featured { grid-column: 1; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body oncontextmenu="return false;">
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <img src="grainco_logo1.jpg" alt="Grainco — Courtier en grains">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#carousel-section">Actualités</a></li>
+    <li><a href="#gallery">Produits</a></li>
+    <li><a href="#featured">Services</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-text">
+    <div class="hero-badge-wrap">
+      <img src="anniversaire2.png" class="hero-anniversary" alt="43 ans 1983-2026">
+      <div class="hero-badge">Depuis 1983</div>
+    </div>
+    <p class="hero-eyebrow">Courtier en grains — Grain Broker</p>
+    <h1 class="hero-title">L'expertise des marchés mondiaux<br>à <em>votre service</em></h1>
+    <p class="hero-sub">Grainco accompagne acheteurs et vendeurs de céréales et de matières premières destinées à l'alimentation animale avec une parfaite maîtrise des marchés agricoles et une compétence en marketing des matières premières.</p>
+    <div class="hero-btns">
+      <a href="#gallery" class="btn-primary">
+        Nos produits
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="ffscm-code-deontologie-courtiers.pdf" target="_blank" class="btn-deonto">
+        Code de déontologie
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2h6l4 4v8H4V2z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <img src="ChampBlé.jpg" alt="Champ de blé à la moisson">
+  </div>
+</section>
+
+<!-- CAROUSEL ACTUALITÉS -->
+<section id="carousel-section">
+  <p class="section-label reveal">Marché &amp; Actualités</p>
+  <h2 class="section-title reveal reveal-delay-1">Les matières premières agricoles au fil des saisons</h2>
+  <p class="section-desc reveal reveal-delay-2">Suivez l'évolution des marchés céréaliers et les actualités de la filière agricole internationale.</p>
+
+  <div class="carousel-outer reveal reveal-delay-3">
+    <div class="carousel-track" id="track">
+      <div class="carousel-slide">
+        <img src="campagne.png" alt="Champs dorés" loading="lazy">
+        <div class="slide-caption">
+          <span class="slide-tag">Récoltes</span>
+          <h3>Campagne céréalière</h3>
+          <p>Les estimations des récoltes pour les 2 hémisphères.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="stockage.png" alt="Tracteur" loading="lazy">
+        <div class="slide-caption">
+          <span class="slide-tag">Logistique</span>
+          <h3>Transport &amp; Stockage</h3>
+          <p>Notre réseau de silos et de transporteurs garantit une chaîne logistique fiable du champ au port.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="échanges.png" alt="Silo" loading="lazy">
+        <div class="slide-caption">
+          <span class="slide-tag">Export</span>
+          <h3>Marchés internationaux</h3>
+          <p>Grainco opère sur les marchés européens et nord-africains avec des partenaires de confiance.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="analyses.jpg" alt="Analyse qualité" loading="lazy">
+        <div class="slide-caption">
+          <span class="slide-tag">Qualité</span>
+          <h3>Contrôle &amp; Traçabilité</h3>
+          <p>Chaque lot fait l'objet d'une analyse complète avant livraison : protéines, humidité, PS.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="canola.jpg" alt="Colza fleuri" loading="lazy">
+        <div class="slide-caption">
+          <span class="slide-tag">Oléagineux</span>
+          <h3>Filière colza et tournesol</h3>
+          <p>Colza et tournesol toutes origines.</p>
+        </div>
+      </div>
+      <div class="carousel-slide">
+        <img src="agriculture.png" alt="Agriculture durable" loading="lazy">
+        <div class="slide-caption">
+          <span class="slide-tag">Durabilité</span>
+          <h3>Agriculture raisonnée</h3>
+          <p>Nous valorisons les pratiques agricoles durables auprès de nos partenaires acheteurs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /carousel-nav -->
+  <div class="carousel-nav">
+    <button class="carousel-btn" id="prev" aria-label="Précédent">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="carousel-btn" id="next" aria-label="Suivant">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M7 4l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div class="carousel-dots" id="dots"></div>
+  </div>
+</section>
+
+<!-- PRODUITS -->
+<section id="gallery">
+  <p class="section-label reveal">Notre gamme</p>
+  <h2 class="section-title reveal reveal-delay-1">Produits</h2>
+  <p class="section-desc reveal reveal-delay-2">Grainco négocie une large gamme de céréales, oléagineux et matières premières pour l'alimentation animale et humaine.</p>
+
+  <div class="gallery-grid reveal reveal-delay-3">
+
+    <!-- Blé — grande carte featured -->
+    <div class="gallery-item featured" onclick="openLightbox(this)">
+      <img src="blé.png" alt="Blé tendre" data-title="Blé Tendre" data-desc="Céréale principale — alimentation humaine &amp; animale">
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-text">
+          <span class="tag">Céréale</span>
+          <h4>Blé tendre &amp; blé dur</h4>
+          <p>Proposé en blé meunier ou en blé fourrager .</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maïs -->
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="Mais.jpg" alt="Maïs" loading="lazy" data-title="Maïs" data-desc="Grain et fourrage — alimentation animale">
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-text">
+          <span class="tag">Céréale</span>
+          <h4>Maïs</h4>
+          <p>Maïs grain.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orge -->
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="barley.jpg" alt="Orge" loading="lazy" data-title="Orge" data-desc="Brassicole &amp; fourrager — qualité garantie">
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-text">
+          <span class="tag">Céréale</span>
+          <h4>Orge</h4>
+          <p>Orge fourragère.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Luzerne -->
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="luzerne.png" alt="Luzerne" loading="lazy" data-title="Luzerne" data-desc="Fourrage déshydraté — riche en protéines">
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-text">
+          <span class="tag">Fourrage</span>
+          <h4>Luzerne</h4>
+          <p>Déshydratée en balles ou en pellets.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colza -->
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="colza.png" alt="Colza" loading="lazy" data-title="Colza" data-desc="Oléagineux — huile végétale &amp; tourteaux">
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-text">
+          <span class="tag">Oléagineux</span>
+          <h4>Colza et tournesol</h4>
+          <p>Tourteaux de colza ou tourteaux de tournesol en pellets.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pulpes de betteraves -->
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="betteraves.png" alt="Pulpes de betteraves" loading="lazy" data-title="Pulpes de Betteraves" data-desc="Co-produit sucrier — alimentation animale">
+      <div class="gallery-overlay">
+        <div class="gallery-overlay-text">
+          <span class="tag">Co-produit</span>
+          <h4>Pulpes de Betteraves</h4>
+          <p>En pellets.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="featured">
+  <p class="section-label reveal">Pourquoi Grainco</p>
+  <h2 class="section-title reveal reveal-delay-1">Nos services</h2>
+  <p class="section-desc reveal reveal-delay-2">Un accompagnement complet, de la négociation à la livraison, avec une transparence totale sur les prix et les conditions.</p>
+
+  <div class="featured-grid">
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=75" alt="Courtage" loading="lazy">
+      </div>
+      <div class="feat-card-body">
+        <p class="feat-card-tag">Service — Négoce</p>
+        <h3>Courtage &amp; Conseil</h3>
+        <p>Nous mettons en relation acheteurs et vendeurs en assurant la confidentialité et le suivi de chaque transaction.</p>
+      </div>
+      <div class="feat-card-footer">
+        <span class="feat-card-meta">Internationale</span>
+        <a href="#contact" class="feat-card-link">En savoir plus <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=75" alt="Logistique" loading="lazy">
+      </div>
+      <div class="feat-card-body">
+        <p class="feat-card-tag">Service — Logistique</p>
+        <h3>Transport &amp; Stockage</h3>
+        <p>Réseaux agréés pour l'export vers l'Europe et l'Afrique du Nord.</p>
+      </div>
+      <div class="feat-card-footer">
+        <span class="feat-card-meta">Camion, train, bateau</span>
+        <a href="#contact" class="feat-card-link">En savoir plus <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="feat-card reveal reveal-delay-3">
+      <div class="feat-card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=75" alt="Analyse" loading="lazy">
+      </div>
+      <div class="feat-card-body">
+        <p class="feat-card-tag">Service — Qualité</p>
+        <h3>Analyses &amp; Traçabilité</h3>
+        <p>Chaque livraison est accompagnée d'un bulletin d'analyse officiel garantissant la conformité aux spécifications contractuelles.</p>
+      </div>
+      <div class="feat-card-footer">
+        <span class="feat-card-meta">Labos accrédités</span>
+        <a href="#contact" class="feat-card-link">En savoir plus <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label reveal" style="text-align:center;">Nous contacter</p>
+  <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">Parlons de votre projet</h2>
+  <p class="section-desc reveal reveal-delay-2" style="text-align:center; margin: 0 auto 2.5rem;">Importateur ou exportateur — notre équipe est disponible pour répondre à toutes vos demandes de cotation et d'information.</p>
+
+  <div class="contact-grid">
+    <div class="contact-info reveal reveal-delay-2">
+      <p class="contact-address">
+        Grainco sas<br>
+        2 Ter rue Georges Charpak<br>
+        76130 Mont Saint Aignan<br>
+        FRANCE
+      </p>
+      <p class="contact-tel">Tél : +33 (0)2 32 80 00 78</p>
+      <a href="mailto:grainco@grainco.fr" class="btn-white">
+        Envoyer un message
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="contact-map reveal reveal-delay-3">
+      <div id="map"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a class="nav-logo" href="#">
+    <img src="grainco_logo1.jpg" alt="Grainco — Courtier en grains">
+  </a>
+  <span>© 2026 Grainco — SAS au capital de 109 600 € — SIRET : 328 070 107 00102 — APE : 4611Z — TVA : FR 27 328 070 107</span>
+  <span>Normandie, France</span>
+</footer>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox()">✕</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-caption" id="lb-caption"></div>
+</div>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+
+const track = document.getElementById('track');
+const slides = track.querySelectorAll('.carousel-slide');
+const dotsWrap = document.getElementById('dots');
+let current = 0;
+
+function getVisible() { const w = window.innerWidth; return w < 600 ? 1 : w < 900 ? 2 : 3; }
+
+function getSlideWidth() {
+  // Must match CSS: (100vw - 8vw - gaps) / visible
+  const vw = window.innerWidth;
+  const padding = vw * 0.08; // 4vw each side
+  const visible = getVisible();
+  const gaps = 1.5 * 16 * (visible - 1); // 1.5rem gaps between visible slides
+  return (vw - padding - gaps) / visible;
+}
+
+function buildDots() {
+  dotsWrap.innerHTML = '';
+  const total = Math.max(1, slides.length - getVisible() + 1);
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('span');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  }
+}
+
+function goTo(n) {
+  const max = slides.length - getVisible();
+  current = Math.max(0, Math.min(n, max));
+  const slideW = getSlideWidth();
+  const gap = 1.5 * 16;
+  track.style.transform = `translateX(-${current * (slideW + gap)}px)`;
+  dotsWrap.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+}
+
+document.getElementById('prev').addEventListener('click', () => goTo(current - 1));
+document.getElementById('next').addEventListener('click', () => goTo(current + 1));
+window.addEventListener('resize', () => { buildDots(); goTo(current); });
+buildDots();
+
+let startX = 0;
+track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+track.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - startX; if (Math.abs(dx) > 50) goTo(dx < 0 ? current + 1 : current - 1); });
+
+function openLightbox(el) {
+  const img = el.querySelector('img');
+  const src = img.src.includes('unsplash') ? img.src.replace('w=700', 'w=1400') : img.src;
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lb-caption').textContent = (img.dataset.title || '') + (img.dataset.desc ? ' — ' + img.dataset.desc : '');
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(e) {
+  if (!e || e.target === document.getElementById('lightbox') || e.currentTarget.classList.contains('lb-close')) {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox({ target: document.getElementById('lightbox') }); });
+
+const reveals = document.querySelectorAll('.reveal');
+const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+reveals.forEach(r => obs.observe(r));// LEAFLET MAP
+const map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([49.4637, 1.0891], 15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 19
+}).addTo(map);
+const icon = L.divIcon({
+  className: '',
+  html: '<div style="width:14px;height:14px;background:#3d8a2e;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.4);"></div>',
+  iconSize: [14, 14],
+  iconAnchor: [7, 7]
+});
+L.marker([49.4637, 1.0891], { icon })
+  .addTo(map)
+  .bindPopup('<strong>Grainco</strong><br>2 Ter rue Georges Charpak<br>76130 Mont Saint Aignan')
+  .openPopup();
+</script>
+</body>
+</html>
