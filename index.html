@@ -63,9 +63,9 @@
   .section-desc { color: var(--gray); font-size: .95rem; line-height: 1.75; max-width: 44rem; margin-bottom: 3rem; }
 
   /* CAROUSEL */
-  #carousel-section { background: var(--navy-dk); color: #fff; }
-  #carousel-section .section-title { color: #fff; }
-  #carousel-section .section-desc { color: rgba(255,255,255,.45); }
+  #actualites { background: var(--navy-dk); color: #fff; }
+  #actualites .section-title { color: #fff; }
+  #actualites .section-desc { color: rgba(255,255,255,.45); }
   .carousel-outer { overflow: hidden; margin: 0 -4vw; padding: 0 4vw; }
   .carousel-track { display: flex; gap: 1.5rem; transition: transform .55s cubic-bezier(.77,0,.18,1); will-change: transform; }
   .carousel-slide { width: calc((100vw - 8vw - 3rem) / 3); min-width: 0; flex-shrink: 0; background: #1a2d3f; overflow: hidden; cursor: pointer; border: 1px solid rgba(90,171,74,.12); }
@@ -83,7 +83,7 @@
   .dot.active { background: var(--green); transform: scale(1.4); }
 
   /* PRODUITS GRID */
-  #gallery { background: var(--cream); }
+  #produits { background: var(--cream); }
   .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
   .gallery-item { position: relative; overflow: hidden; background: #ccc; cursor: pointer; }
   .gallery-item.featured { grid-column: span 2; grid-row: span 2; }
@@ -99,7 +99,7 @@
   .gallery-label span { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.9); font-weight: 500; }
 
   /* SERVICES */
-  #featured { background: var(--white); }
+  #services { background: var(--white); }
   .featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 2rem; }
   .feat-card { background: var(--card-bg); border: 1px solid rgba(30,58,95,.09); overflow: hidden; transition: box-shadow .3s, transform .3s; }
   .feat-card:hover { box-shadow: 0 18px 52px rgba(30,58,95,.12); transform: translateY(-4px); }
@@ -188,9 +188,9 @@
     <img src="grainco_logo1.jpg" alt="Grainco — Courtier en grains">
   </a>
   <ul class="nav-links">
-    <li><a href="#carousel-section">Actualités</a></li>
-    <li><a href="#gallery">Produits</a></li>
-    <li><a href="#featured">Services</a></li>
+    <li><a href="#actualites">Actualités</a></li>
+    <li><a href="#produits">Produits</a></li>
+    <li><a href="#services">Services</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
 </nav>
@@ -206,7 +206,7 @@
     <h1 class="hero-title">L'expertise des marchés mondiaux<br>à <em>votre service</em></h1>
     <p class="hero-sub">Grainco accompagne acheteurs et vendeurs de céréales et de produits destinés pour l'alimentation animale avec une parfaite maîtrise des marchés agricoles et une compétence en marketing des matières premières.</p>
     <div class="hero-btns">
-      <a href="#gallery" class="btn-primary">
+      <a href="#produits" class="btn-primary">
         Nos produits
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -222,7 +222,7 @@
 </section>
 
 <!-- CAROUSEL ACTUALITÉS -->
-<section id="carousel-section">
+<section id="actualites">
   <p class="section-label reveal">Marché &amp; Actualités</p>
   <h2 class="section-title reveal reveal-delay-1">Les matières premières agricoles au fil des saisons</h2>
   <p class="section-desc reveal reveal-delay-2">Suivez l'évolution des marchés céréaliers et les actualités de la filière agricole internationale.</p>
@@ -292,7 +292,7 @@
 </section>
 
 <!-- PRODUITS -->
-<section id="gallery">
+<section id="produits">
   <p class="section-label reveal">Notre gamme</p>
   <h2 class="section-title reveal reveal-delay-1">Produits</h2>
   <p class="section-desc reveal reveal-delay-2">Grainco négocie une large gamme de céréales, oléagineux et matières premières pour l'alimentation animale et humaine.</p>
@@ -374,7 +374,7 @@
 </section>
 
 <!-- SERVICES -->
-<section id="featured">
+<section id="services">
   <p class="section-label reveal">Pourquoi Grainco</p>
   <h2 class="section-title reveal reveal-delay-1">Nos services</h2>
   <p class="section-desc reveal reveal-delay-2">Un accompagnement complet, de la négociation à la livraison, avec une transparence totale sur les prix et les conditions.</p>
