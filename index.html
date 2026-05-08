@@ -32,9 +32,17 @@
   nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; padding: 0 4vw; z-index: 100; background: var(--white); box-shadow: 0 1px 0 rgba(30,58,95,.08); }
   .nav-logo img { height: 72px; width: auto; display: block; }
   footer .nav-logo img { background: var(--white); padding: 6px 10px; border-radius: 4px; }
+  .nav-right { display: flex; align-items: center; gap: 2.4rem; }
   .nav-links { display: flex; gap: 2.4rem; list-style: none; }
   .nav-links a { font-size: .82rem; letter-spacing: .13em; text-transform: uppercase; color: var(--navy); text-decoration: none; opacity: .6; transition: opacity .2s, color .2s; font-weight: 400; }
   .nav-links a:hover { opacity: 1; color: var(--green-dk); }
+
+  /* LANG SWITCHER */
+  .lang-switcher { display: flex; align-items: center; border: 1px solid rgba(30,58,95,.18); overflow: hidden; border-radius: 2px; flex-shrink: 0; }
+  .lang-btn { padding: .38rem .72rem; font-size: .72rem; letter-spacing: .12em; font-weight: 500; text-transform: uppercase; border: none; background: transparent; color: var(--navy); cursor: pointer; transition: background .18s, color .18s; font-family: 'DM Sans', sans-serif; opacity: .55; }
+  .lang-btn.active { background: var(--navy); color: #fff; opacity: 1; }
+  .lang-btn:not(.active):hover { background: var(--cream); opacity: 1; }
+  .lang-sep { width: 1px; background: rgba(30,58,95,.18); height: 28px; }
 
   /* HERO */
   #hero { height: 100svh; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
@@ -128,18 +136,13 @@
   #contact { background: var(--green-dk); padding: 5rem 4vw; }
   #contact .section-label { color: rgba(255,255,255,.6); text-align: center; }
   #contact .section-title { color: #fff; margin-bottom: 1rem; text-align: center; }
-  #contact .section-desc { color: rgba(255,255,255,.62); margin-bottom: 2rem; text-align: center; }
+  #contact .section-desc { color: rgba(255,255,255,.62); margin-bottom: 2rem; text-align: center; margin-left: auto; margin-right: auto;}
   .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
   .contact-info { display: flex; flex-direction: column; gap: 1.2rem; align-items: center; text-align: center; }
   .contact-address { color: rgba(255,255,255,.85); font-size: .95rem; line-height: 1.8; text-align: center; }
   .contact-tel { color: rgba(255,255,255,.85); font-size: .95rem; font-weight: 500; text-align: center; }
   .contact-map { border-radius: 2px; overflow: hidden; height: 320px; }
   #map { width: 100%; height: 100%; }
-  @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } .contact-map { height: 260px; } }
-  @media (max-width: 600px) {
-    footer { flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding: 2rem 6vw; }
-    footer .nav-logo { margin-bottom: .5rem; }
-  }
   .btn-white { display: inline-flex; align-items: center; gap: .6rem; padding: .9rem 2rem; background: #fff; color: var(--navy); font-size: .82rem; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; font-weight: 500; transition: background .2s, transform .2s; }
   .btn-white:hover { background: var(--cream); transform: translateY(-2px); }
 
@@ -147,15 +150,8 @@
   footer { background: var(--navy-dk); color: rgba(255,255,255,.35); padding: 2.5rem 4vw; display: flex; align-items: center; justify-content: space-between; font-size: .78rem; letter-spacing: .05em; }
   footer .nav-logo img { height: 72px; width: auto; display: block; background: var(--white); padding: 6px 10px; border-radius: 4px; }
 
-  img {
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
-    pointer-events: none;
-  }
-  .gallery-item, .carousel-slide, .feat-card, .nav-logo, footer .nav-logo {
-    pointer-events: all;
-  }
+  img { -webkit-user-select: none; user-select: none; -webkit-user-drag: none; pointer-events: none; }
+  .gallery-item, .carousel-slide, .feat-card, .nav-logo, footer .nav-logo { pointer-events: all; }
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
   .reveal.visible { opacity: 1; transform: none; }
   .reveal-delay-1 { transition-delay: .1s; }
@@ -171,6 +167,8 @@
     .gallery-grid { grid-template-columns: repeat(2, 1fr); }
     .gallery-item.featured { grid-column: span 2; }
     .nav-links { gap: 1.5rem; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .contact-map { height: 260px; }
   }
   @media (max-width: 600px) {
     .carousel-slide { width: calc(100vw - 8vw); }
@@ -178,6 +176,8 @@
     .gallery-item.featured { grid-column: 1; }
     .nav-links { display: none; }
     .hero-anniversary { bottom: calc(100% - 1.5rem); }
+    footer { flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding: 2rem 6vw; }
+    footer .nav-logo { margin-bottom: .5rem; }
   }
 </style>
 </head>
@@ -188,12 +188,19 @@
   <a class="nav-logo" href="#">
     <img src="grainco_logo1.jpg" alt="Grainco — Courtier en grains">
   </a>
-  <ul class="nav-links">
-    <li><a href="#actualites">Actualités</a></li>
-    <li><a href="#produits">Produits</a></li>
-    <li><a href="#services">Services</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#actualites" data-fr="Actualités" data-en="News">Actualités</a></li>
+      <li><a href="#produits" data-fr="Produits" data-en="Products">Produits</a></li>
+      <li><a href="#services" data-fr="Services" data-en="Services">Services</a></li>
+      <li><a href="#contact" data-fr="Contact" data-en="Contact">Contact</a></li>
+    </ul>
+    <div class="lang-switcher">
+      <button class="lang-btn active" id="btn-fr" onclick="setLang('fr')">FR</button>
+      <div class="lang-sep"></div>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -201,18 +208,20 @@
   <div class="hero-text">
     <div class="hero-badge-wrap">
       <img src="anniversaire2.png" class="hero-anniversary" alt="43 ans 1983-2026">
-      <div class="hero-badge">Depuis 1983</div>
+      <div class="hero-badge" data-fr="Depuis 1983" data-en="Since 1983">Depuis 1983</div>
     </div>
     <p class="hero-eyebrow">Courtier en grains — Grain Broker</p>
-    <h1 class="hero-title">L'expertise des marchés mondiaux<br>à <em>votre service</em></h1>
-    <p class="hero-sub">Grainco accompagne acheteurs et vendeurs de céréales et de produits destinés pour l'alimentation animale avec une parfaite maîtrise des marchés agricoles et une compétence en marketing des matières premières.</p>
+    <h1 class="hero-title">
+      <span data-fr="L'expertise des marchés mondiaux<br>à <em>votre service</em>" data-en="World market expertise<br>at <em>your service</em>">L'expertise des marchés mondiaux<br>à <em>votre service</em></span>
+    </h1>
+    <p class="hero-sub" data-fr="Grainco accompagne acheteurs et vendeurs de céréales et de produits destinés pour l'alimentation animale avec une parfaite maîtrise des marchés agricoles et une compétence en marketing des matières premières." data-en="Grainco supports buyers and sellers of cereals and animal feed products, with deep expertise in agricultural markets and commodity marketing.">Grainco accompagne acheteurs et vendeurs de céréales et de produits destinés pour l'alimentation animale avec une parfaite maîtrise des marchés agricoles et une compétence en marketing des matières premières.</p>
     <div class="hero-btns">
       <a href="#produits" class="btn-primary">
-        Nos produits
+        <span data-fr="Nos produits" data-en="Our products">Nos produits</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <a href="ffscm-code-deontologie-courtiers.pdf" target="_blank" class="btn-deonto">
-        Code de déontologie
+        <span data-fr="Code de déontologie" data-en="Code of Ethics">Code de déontologie</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 2h6l4 4v8H4V2z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 2v4h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
@@ -224,63 +233,62 @@
 
 <!-- CAROUSEL ACTUALITÉS -->
 <section id="actualites">
-  <p class="section-label reveal">Marché &amp; Actualités</p>
-  <h2 class="section-title reveal reveal-delay-1">Les matières premières agricoles au fil des saisons</h2>
-  <p class="section-desc reveal reveal-delay-2">Suivez l'évolution des marchés céréaliers et les actualités de la filière agricole internationale.</p>
+  <p class="section-label reveal" data-fr="Marché &amp; Actualités" data-en="Market &amp; News">Marché &amp; Actualités</p>
+  <h2 class="section-title reveal reveal-delay-1" data-fr="Les matières premières agricoles au fil des saisons" data-en="Agricultural commodities through the seasons">Les matières premières agricoles au fil des saisons</h2>
+  <p class="section-desc reveal reveal-delay-2" data-fr="Suivez l'évolution des marchés céréaliers et les actualités de la filière agricole internationale." data-en="Follow cereal market developments and the latest news from the international agricultural sector.">Suivez l'évolution des marchés céréaliers et les actualités de la filière agricole internationale.</p>
 
   <div class="carousel-outer reveal reveal-delay-3">
     <div class="carousel-track" id="track">
       <div class="carousel-slide">
         <img src="campagne.png" alt="Champs dorés" loading="lazy">
         <div class="slide-caption">
-          <span class="slide-tag">Récoltes</span>
-          <h3>Campagne céréalière</h3>
-          <p>Les estimations des récoltes pour les 2 hémisphères.</p>
+          <span class="slide-tag" data-fr="Récoltes" data-en="Harvests">Récoltes</span>
+          <h3 data-fr="Campagne céréalière" data-en="Grain campaign">Campagne céréalière</h3>
+          <p data-fr="Les estimations des récoltes pour les 2 hémisphères." data-en="Harvest estimates for both hemispheres.">Les estimations des récoltes pour les 2 hémisphères.</p>
         </div>
       </div>
       <div class="carousel-slide">
         <img src="stockage.png" alt="Tracteur" loading="lazy">
         <div class="slide-caption">
-          <span class="slide-tag">Logistique</span>
-          <h3>Transport &amp; Stockage</h3>
-          <p>Notre réseau de silos et de transporteurs garantit une chaîne logistique fiable du champ au port.</p>
+          <span class="slide-tag" data-fr="Logistique" data-en="Logistics">Logistique</span>
+          <h3 data-fr="Transport &amp; Stockage" data-en="Transport &amp; Storage">Transport &amp; Stockage</h3>
+          <p data-fr="Notre réseau de silos et de transporteurs garantit une chaîne logistique fiable du champ au port." data-en="Our network of silos and carriers ensures a reliable logistics chain from field to port.">Notre réseau de silos et de transporteurs garantit une chaîne logistique fiable du champ au port.</p>
         </div>
       </div>
       <div class="carousel-slide">
         <img src="échanges.png" alt="Silo" loading="lazy">
         <div class="slide-caption">
-          <span class="slide-tag">Export</span>
-          <h3>Marchés internationaux</h3>
-          <p>Grainco opère sur les marchés européens et nord-africains avec des partenaires de confiance.</p>
+          <span class="slide-tag" data-fr="Export" data-en="Export">Export</span>
+          <h3 data-fr="Marchés internationaux" data-en="International markets">Marchés internationaux</h3>
+          <p data-fr="Grainco opère sur les marchés européens et nord-africains avec des partenaires de confiance." data-en="Grainco operates on European and North African markets with trusted partners.">Grainco opère sur les marchés européens et nord-africains avec des partenaires de confiance.</p>
         </div>
       </div>
       <div class="carousel-slide">
         <img src="analyses.jpg" alt="Analyse qualité" loading="lazy">
         <div class="slide-caption">
-          <span class="slide-tag">Qualité</span>
-          <h3>Contrôle &amp; Traçabilité</h3>
-          <p>Chaque lot fait l'objet d'une analyse complète avant livraison : protéines, humidité, PS.</p>
+          <span class="slide-tag" data-fr="Qualité" data-en="Quality">Qualité</span>
+          <h3 data-fr="Contrôle &amp; Traçabilité" data-en="Control &amp; Traceability">Contrôle &amp; Traçabilité</h3>
+          <p data-fr="Chaque lot fait l'objet d'une analyse complète avant livraison : protéines, humidité, PS." data-en="Each batch undergoes a full analysis before delivery: proteins, moisture, specific weight.">Chaque lot fait l'objet d'une analyse complète avant livraison : protéines, humidité, PS.</p>
         </div>
       </div>
       <div class="carousel-slide">
         <img src="canola.jpg" alt="Colza fleuri" loading="lazy">
         <div class="slide-caption">
-          <span class="slide-tag">Oléagineux</span>
-          <h3>Filière colza et tournesol</h3>
-          <p>Colza et tournesol toutes origines.</p>
+          <span class="slide-tag" data-fr="Oléagineux" data-en="Oilseeds">Oléagineux</span>
+          <h3 data-fr="Filière colza et tournesol" data-en="Rapeseed &amp; sunflower sector">Filière colza et tournesol</h3>
+          <p data-fr="Colza et tournesol toutes origines." data-en="Rapeseed and sunflower from all origins.">Colza et tournesol toutes origines.</p>
         </div>
       </div>
       <div class="carousel-slide">
         <img src="agriculture.png" alt="Agriculture durable" loading="lazy">
         <div class="slide-caption">
-          <span class="slide-tag">Durabilité</span>
-          <h3>Agriculture raisonnée</h3>
-          <p>Nous valorisons les pratiques agricoles durables auprès de nos partenaires acheteurs.</p>
+          <span class="slide-tag" data-fr="Durabilité" data-en="Sustainability">Durabilité</span>
+          <h3 data-fr="Agriculture raisonnée" data-en="Sustainable farming">Agriculture raisonnée</h3>
+          <p data-fr="Nous valorisons les pratiques agricoles durables auprès de nos partenaires acheteurs." data-en="We promote sustainable farming practices among our buying partners.">Nous valorisons les pratiques agricoles durables auprès de nos partenaires acheteurs.</p>
         </div>
       </div>
     </div>
   </div>
-  <!-- /carousel-nav -->
   <div class="carousel-nav">
     <button class="carousel-btn" id="prev" aria-label="Précédent">
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M11 4L6 9l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -294,80 +302,68 @@
 
 <!-- PRODUITS -->
 <section id="produits">
-  <p class="section-label reveal">Notre gamme</p>
-  <h2 class="section-title reveal reveal-delay-1">Produits</h2>
-  <p class="section-desc reveal reveal-delay-2">Grainco négocie une large gamme de céréales, oléagineux et matières premières pour l'alimentation animale et humaine.</p>
+  <p class="section-label reveal" data-fr="Notre gamme" data-en="Our range">Notre gamme</p>
+  <h2 class="section-title reveal reveal-delay-1" data-fr="Produits" data-en="Products">Produits</h2>
+  <p class="section-desc reveal reveal-delay-2" data-fr="Grainco négocie une large gamme de céréales, oléagineux et matières premières pour l'alimentation animale et humaine." data-en="Grainco trades a wide range of cereals, oilseeds and raw materials for animal and human consumption.">Grainco négocie une large gamme de céréales, oléagineux et matières premières pour l'alimentation animale et humaine.</p>
 
   <div class="gallery-grid reveal reveal-delay-3">
-
-    <!-- Blé — grande carte featured -->
     <div class="gallery-item featured" onclick="openLightbox(this)">
-      <img src="blé.png" alt="Blé tendre" data-title="Blé Tendre" data-desc="Céréale principale — alimentation humaine &amp; animale">
+      <img src="blé.png" alt="Blé tendre" data-title-fr="Blé Tendre" data-title-en="Soft Wheat" data-desc-fr="Céréale principale — alimentation humaine &amp; animale" data-desc-en="Main cereal — human &amp; animal consumption">
       <div class="gallery-overlay">
         <div class="gallery-overlay-text">
-          <span class="tag">Céréale</span>
-          <h4>Blé tendre &amp; blé dur</h4>
-          <p>Proposé en blé meunier ou en blé fourrager .</p>
+          <span class="tag" data-fr="Céréale" data-en="Cereal">Céréale</span>
+          <h4 data-fr="Blé tendre &amp; blé dur" data-en="Soft wheat &amp; durum wheat">Blé tendre &amp; blé dur</h4>
+          <p data-fr="Proposé en blé meunier ou en blé fourrager." data-en="Available as milling wheat or feed wheat.">Proposé en blé meunier ou en blé fourrager.</p>
         </div>
       </div>
     </div>
-
-    <!-- Maïs -->
     <div class="gallery-item" onclick="openLightbox(this)">
-      <img src="Mais.jpg" alt="Maïs" loading="lazy" data-title="Maïs" data-desc="Grain et fourrage — alimentation animale">
+      <img src="Mais.jpg" alt="Maïs" loading="lazy" data-title-fr="Maïs" data-title-en="Corn" data-desc-fr="Grain et fourrage — alimentation animale" data-desc-en="Grain and forage — animal feed">
       <div class="gallery-overlay">
         <div class="gallery-overlay-text">
-          <span class="tag">Céréale</span>
-          <h4>Maïs</h4>
-          <p>Maïs grain.</p>
+          <span class="tag" data-fr="Céréale" data-en="Cereal">Céréale</span>
+          <h4 data-fr="Maïs" data-en="Corn">Maïs</h4>
+          <p data-fr="Maïs grain." data-en="Grain corn.">Maïs grain.</p>
         </div>
       </div>
     </div>
-
-    <!-- Orge -->
     <div class="gallery-item" onclick="openLightbox(this)">
-      <img src="barley.png" alt="Orge" loading="lazy" data-title="Orge" data-desc="Brassicole &amp; fourrager — qualité garantie">
+      <img src="barley.png" alt="Orge" loading="lazy" data-title-fr="Orge" data-title-en="Barley" data-desc-fr="Brassicole &amp; fourrager — qualité garantie" data-desc-en="Malting &amp; feed — guaranteed quality">
       <div class="gallery-overlay">
         <div class="gallery-overlay-text">
-          <span class="tag">Céréale</span>
-          <h4>Orge</h4>
-          <p>Orge fourragère.</p>
+          <span class="tag" data-fr="Céréale" data-en="Cereal">Céréale</span>
+          <h4 data-fr="Orge" data-en="Barley">Orge</h4>
+          <p data-fr="Orge fourragère." data-en="Feed barley.">Orge fourragère.</p>
         </div>
       </div>
     </div>
-
-    <!-- Luzerne -->
     <div class="gallery-item" onclick="openLightbox(this)">
-      <img src="luzerne.png" alt="Luzerne" loading="lazy" data-title="Luzerne" data-desc="Fourrage déshydraté — riche en protéines">
+      <img src="luzerne.png" alt="Luzerne" loading="lazy" data-title-fr="Luzerne" data-title-en="Alfalfa" data-desc-fr="Fourrage déshydraté — riche en protéines" data-desc-en="Dehydrated forage — protein-rich">
       <div class="gallery-overlay">
         <div class="gallery-overlay-text">
-          <span class="tag">Fourrage</span>
-          <h4>Luzerne</h4>
-          <p>Déshydratée en balles ou en pellets.</p>
+          <span class="tag" data-fr="Fourrage" data-en="Forage">Fourrage</span>
+          <h4 data-fr="Luzerne" data-en="Alfalfa">Luzerne</h4>
+          <p data-fr="Déshydratée en balles ou en pellets." data-en="Dehydrated in bales or pellets.">Déshydratée en balles ou en pellets.</p>
         </div>
       </div>
     </div>
-
-    <!-- Colza -->
     <div class="gallery-item" onclick="openLightbox(this)">
-      <img src="colza.png" alt="Colza" loading="lazy" data-title="Colza" data-desc="Oléagineux — huile végétale &amp; tourteaux">
+      <img src="colza.png" alt="Colza" loading="lazy" data-title-fr="Colza" data-title-en="Rapeseed" data-desc-fr="Oléagineux — huile végétale &amp; tourteaux" data-desc-en="Oilseed — vegetable oil &amp; meal">
       <div class="gallery-overlay">
         <div class="gallery-overlay-text">
-          <span class="tag">Oléagineux</span>
-          <h4>Colza et tournesol</h4>
-          <p>Tourteaux de colza ou tourteaux de tournesol en pellets.</p>
+          <span class="tag" data-fr="Oléagineux" data-en="Oilseeds">Oléagineux</span>
+          <h4 data-fr="Colza et tournesol" data-en="Rapeseed &amp; sunflower">Colza et tournesol</h4>
+          <p data-fr="Tourteaux de colza ou tourteaux de tournesol en pellets." data-en="Rapeseed meal or sunflower meal in pellets.">Tourteaux de colza ou tourteaux de tournesol en pellets.</p>
         </div>
       </div>
     </div>
-
-    <!-- Pulpes de betteraves -->
     <div class="gallery-item" onclick="openLightbox(this)">
-      <img src="betteraves.png" alt="Pulpes de betteraves" loading="lazy" data-title="Pulpes de Betteraves" data-desc="Co-produit sucrier — alimentation animale">
+      <img src="betteraves.png" alt="Pulpes de betteraves" loading="lazy" data-title-fr="Pulpes de Betteraves" data-title-en="Sugar Beet Pulp" data-desc-fr="Co-produit sucrier — alimentation animale" data-desc-en="Sugar by-product — animal feed">
       <div class="gallery-overlay">
         <div class="gallery-overlay-text">
-          <span class="tag">Co-produit</span>
-          <h4>Pulpes de Betteraves</h4>
-          <p>En pellets.</p>
+          <span class="tag" data-fr="Co-produit" data-en="By-product">Co-produit</span>
+          <h4 data-fr="Pulpes de Betteraves" data-en="Sugar Beet Pulp">Pulpes de Betteraves</h4>
+          <p data-fr="En pellets." data-en="In pellets.">En pellets.</p>
         </div>
       </div>
     </div>
@@ -376,9 +372,9 @@
 
 <!-- SERVICES -->
 <section id="services">
-  <p class="section-label reveal">Pourquoi Grainco</p>
-  <h2 class="section-title reveal reveal-delay-1">Nos services</h2>
-  <p class="section-desc reveal reveal-delay-2">Un accompagnement complet, de la négociation à la livraison, avec une transparence totale sur les prix et les conditions.</p>
+  <p class="section-label reveal" data-fr="Pourquoi Grainco" data-en="Why Grainco">Pourquoi Grainco</p>
+  <h2 class="section-title reveal reveal-delay-1" data-fr="Nos services" data-en="Our services">Nos services</h2>
+  <p class="section-desc reveal reveal-delay-2" data-fr="Un accompagnement complet, de la négociation à la livraison, avec une transparence totale sur les prix et les conditions." data-en="Full support from negotiation to delivery, with complete transparency on prices and terms.">Un accompagnement complet, de la négociation à la livraison, avec une transparence totale sur les prix et les conditions.</p>
 
   <div class="featured-grid">
     <div class="feat-card reveal reveal-delay-1">
@@ -386,13 +382,13 @@
         <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=75" alt="Courtage" loading="lazy">
       </div>
       <div class="feat-card-body">
-        <p class="feat-card-tag">Service — Négoce</p>
-        <h3>Courtage &amp; Conseil</h3>
-        <p>Nous mettons en relation acheteurs et vendeurs en assurant la confidentialité et le suivi de chaque transaction.</p>
+        <p class="feat-card-tag" data-fr="Service — Négoce" data-en="Service — Trading">Service — Négoce</p>
+        <h3 data-fr="Courtage &amp; Conseil" data-en="Brokerage &amp; Advisory">Courtage &amp; Conseil</h3>
+        <p data-fr="Nous mettons en relation acheteurs et vendeurs en assurant la confidentialité et le suivi de chaque transaction." data-en="We connect buyers and sellers while ensuring confidentiality and monitoring each transaction.">Nous mettons en relation acheteurs et vendeurs en assurant la confidentialité et le suivi de chaque transaction.</p>
       </div>
       <div class="feat-card-footer">
-        <span class="feat-card-meta">Internationale</span>
-        <a href="#contact" class="feat-card-link">En savoir plus <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <span class="feat-card-meta" data-fr="Internationale" data-en="International">Internationale</span>
+        <a href="#contact" class="feat-card-link"><span data-fr="En savoir plus" data-en="Learn more">En savoir plus</span> <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
     <div class="feat-card reveal reveal-delay-2">
@@ -400,13 +396,13 @@
         <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=75" alt="Logistique" loading="lazy">
       </div>
       <div class="feat-card-body">
-        <p class="feat-card-tag">Service — Logistique</p>
-        <h3>Transport &amp; Stockage</h3>
-        <p>Réseaux agréés pour l'export vers l'Europe et l'Afrique du Nord.</p>
+        <p class="feat-card-tag" data-fr="Service — Logistique" data-en="Service — Logistics">Service — Logistique</p>
+        <h3 data-fr="Transport &amp; Stockage" data-en="Transport &amp; Storage">Transport &amp; Stockage</h3>
+        <p data-fr="Réseaux agréés pour l'export vers l'Europe et l'Afrique du Nord." data-en="Approved networks for export to Europe and North Africa.">Réseaux agréés pour l'export vers l'Europe et l'Afrique du Nord.</p>
       </div>
       <div class="feat-card-footer">
-        <span class="feat-card-meta">Camion, train, bateau</span>
-        <a href="#contact" class="feat-card-link">En savoir plus <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <span class="feat-card-meta" data-fr="Camion, train, bateau" data-en="Truck, rail, sea">Camion, train, bateau</span>
+        <a href="#contact" class="feat-card-link"><span data-fr="En savoir plus" data-en="Learn more">En savoir plus</span> <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
     <div class="feat-card reveal reveal-delay-3">
@@ -414,13 +410,13 @@
         <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=75" alt="Analyse" loading="lazy">
       </div>
       <div class="feat-card-body">
-        <p class="feat-card-tag">Service — Qualité</p>
-        <h3>Analyses &amp; Traçabilité</h3>
-        <p>Chaque livraison est accompagnée d'un bulletin d'analyse officiel garantissant la conformité aux spécifications contractuelles.</p>
+        <p class="feat-card-tag" data-fr="Service — Qualité" data-en="Service — Quality">Service — Qualité</p>
+        <h3 data-fr="Analyses &amp; Traçabilité" data-en="Analysis &amp; Traceability">Analyses &amp; Traçabilité</h3>
+        <p data-fr="Chaque livraison est accompagnée d'un bulletin d'analyse officiel garantissant la conformité aux spécifications contractuelles." data-en="Every delivery comes with an official analysis certificate guaranteeing compliance with contractual specifications.">Chaque livraison est accompagnée d'un bulletin d'analyse officiel garantissant la conformité aux spécifications contractuelles.</p>
       </div>
       <div class="feat-card-footer">
-        <span class="feat-card-meta">Labos accrédités</span>
-        <a href="#contact" class="feat-card-link">En savoir plus <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <span class="feat-card-meta" data-fr="Labos accrédités" data-en="Accredited labs">Labos accrédités</span>
+        <a href="#contact" class="feat-card-link"><span data-fr="En savoir plus" data-en="Learn more">En savoir plus</span> <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
   </div>
@@ -428,9 +424,9 @@
 
 <!-- CONTACT -->
 <section id="contact">
-  <p class="section-label reveal" style="text-align:center;">Nous contacter</p>
-  <h2 class="section-title reveal reveal-delay-1" style="text-align:center;">Parlons de votre projet</h2>
-  <p class="section-desc reveal reveal-delay-2" style="text-align:center; margin: 0 auto 2.5rem;">Importateur ou exportateur — notre équipe est disponible pour répondre à toutes vos demandes de cotation et d'information.</p>
+  <p class="section-label reveal" data-fr="Nous contacter" data-en="Get in touch">Nous contacter</p>
+  <h2 class="section-title reveal reveal-delay-1" data-fr="Parlons de votre projet" data-en="Let's talk about your project">Parlons de votre projet</h2>
+  <p class="section-desc reveal reveal-delay-2" data-fr="Importateur ou exportateur — notre équipe est disponible pour répondre à toutes vos demandes de cotation et d'information." data-en="Importer or exporter — our team is available to answer all your enquiries and requests for quotation.">Importateur ou exportateur — notre équipe est disponible pour répondre à toutes vos demandes de cotation et d'information.</p>
 
   <div class="contact-grid">
     <div class="contact-info reveal reveal-delay-2">
@@ -442,7 +438,7 @@
       </p>
       <p class="contact-tel">Tél : +33 (0)2 32 80 00 78</p>
       <a href="mailto:grainco@grainco.fr" class="btn-white">
-        Envoyer un message
+        <span data-fr="Envoyer un message" data-en="Send a message">Envoyer un message</span>
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
@@ -457,7 +453,7 @@
   <a class="nav-logo" href="#">
     <img src="grainco_logo1.jpg" alt="Grainco — Courtier en grains">
   </a>
-  <span>© 2026 Grainco — SAS au capital de 109 600 € — SIRET : 328 070 107 00102 — APE : 4611Z — TVA : FR 27 328 070 107</span>
+  <span>© 2026 Grainco — SAS au capital de 109 600 € — SIRET : 328 070 107 00102 — APE : 4611Z — TVA : FR 27 328 070 107</span>
   <span>Normandie, France</span>
 </footer>
 
@@ -469,9 +465,42 @@
 </div>
 
 <script>
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
+// ── LANG SWITCHER ──────────────────────────────────────────────
+let currentLang = 'fr';
 
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+  // Translate all elements with data-fr / data-en
+  document.querySelectorAll('[data-fr]').forEach(el => {
+    const val = el.getAttribute('data-' + lang);
+    if (!val) return;
+    // Use innerHTML for elements that may contain tags (em, br, &amp;)
+    if (el.tagName === 'H1' || el.tagName === 'H2' || el.tagName === 'H3' ||
+        el.tagName === 'H4' || el.tagName === 'P' || el.tagName === 'SPAN' ||
+        el.tagName === 'A' || el.tagName === 'DIV') {
+      el.innerHTML = val;
+    } else {
+      el.textContent = val;
+    }
+  });
+
+  // Page title
+  document.title = lang === 'fr'
+    ? 'Grainco — Courtier en Grains'
+    : 'Grainco — Grain Broker';
+}
+
+// ── NAV SCROLL ─────────────────────────────────────────────────
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ── CAROUSEL ───────────────────────────────────────────────────
 const track = document.getElementById('track');
 const slides = track.querySelectorAll('.carousel-slide');
 const dotsWrap = document.getElementById('dots');
@@ -493,7 +522,6 @@ function buildDots() {
 function goTo(n) {
   const max = slides.length - getVisible();
   current = Math.max(0, Math.min(n, max));
-  // Lire la largeur réelle rendue par le CSS — fiable sur tous les navigateurs y compris iOS/Android
   const slideW = slides[0].getBoundingClientRect().width;
   const gap = parseFloat(getComputedStyle(track).gap) || 24;
   track.style.transform = `translateX(-${current * (slideW + gap)}px)`;
@@ -509,11 +537,21 @@ let startX = 0;
 track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
 track.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - startX; if (Math.abs(dx) > 50) goTo(dx < 0 ? current + 1 : current - 1); });
 
+// ── LIGHTBOX ───────────────────────────────────────────────────
 function openLightbox(el) {
   const img = el.querySelector('img');
   const src = img.src.includes('unsplash') ? img.src.replace('w=700', 'w=1400') : img.src;
+  const titleKey = 'title-' + currentLang;
+  const descKey  = 'desc-'  + currentLang;
+  const title = img.dataset[titleKey.replace('-','').replace('titlefr','titleFr').replace('titleen','titleEn')] || img.dataset['titleFr'] || '';
+  const desc  = img.dataset[descKey.replace('-','').replace('descfr','descFr').replace('descen','descEn')]   || img.dataset['descFr']  || '';
+
+  // Simpler attribute read
+  const t = img.getAttribute('data-title-' + currentLang) || img.getAttribute('data-title-fr') || '';
+  const d = img.getAttribute('data-desc-'  + currentLang) || img.getAttribute('data-desc-fr')  || '';
+
   document.getElementById('lb-img').src = src;
-  document.getElementById('lb-caption').textContent = (img.dataset.title || '') + (img.dataset.desc ? ' — ' + img.dataset.desc : '');
+  document.getElementById('lb-caption').textContent = t + (d ? ' — ' + d : '');
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -527,9 +565,14 @@ function closeLightbox(e) {
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox({ target: document.getElementById('lightbox') }); });
 
+// ── REVEAL ON SCROLL ───────────────────────────────────────────
 const reveals = document.querySelectorAll('.reveal');
-const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
-reveals.forEach(r => obs.observe(r));// LEAFLET MAP
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+reveals.forEach(r => obs.observe(r));
+
+// ── LEAFLET MAP ────────────────────────────────────────────────
 const map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([49.4637, 1.0891], 15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -538,8 +581,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const icon = L.divIcon({
   className: '',
   html: '<div style="width:14px;height:14px;background:#3d8a2e;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,.4);"></div>',
-  iconSize: [14, 14],
-  iconAnchor: [7, 7]
+  iconSize: [14, 14], iconAnchor: [7, 7]
 });
 L.marker([49.4637, 1.0891], { icon })
   .addTo(map)
